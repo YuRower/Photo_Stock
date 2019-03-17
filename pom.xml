@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.photo.stock</groupId>
+	<artifactId>photo-stock</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>photo_stock</name>
+
+	<modules>
+
+		<module>photo-stock-model</module>
+		<module>photo-stock-common</module>
+		<module>photo-stock-ejb</module>
+		<module>photo-stock-web</module>
+		<module>photo-stock-ear</module>
+
+		<!-- <module>photo-stock-ws</module> <module>photo-stock-rest</module> -->
+	</modules>
+</project>
+
