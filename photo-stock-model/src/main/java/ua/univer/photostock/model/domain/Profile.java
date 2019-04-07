@@ -1,4 +1,5 @@
 package ua.univer.photostock.model.domain;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -16,9 +18,8 @@ import ua.univer.photostock.model.validation.EnglishLanguage;
 
 @Entity
 @Table(catalog = "myphotos", schema = "public", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"email"}), 
-    @UniqueConstraint(columnNames = {"uid"})
-})
+        @UniqueConstraint(columnNames = { "email" }),
+        @UniqueConstraint(columnNames = { "uid" }) })
 public class Profile extends AbstractDomain {
 
     @Id
@@ -163,5 +164,10 @@ public class Profile extends AbstractDomain {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    @Transient
+    public String getFullName() {
+        return String.format("%s %s", getFirstName(), getLastName());
     }
 }
