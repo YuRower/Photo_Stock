@@ -1,4 +1,4 @@
-package service;
+package service.bean;
 
 import static java.lang.String.format;
 
@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
@@ -14,9 +15,12 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 
 import repository.PhotoRepository;
 import repository.ProfileRepository;
+import service.ImageStorageService;
+import service.interceptor.AsyncOperationInterceptor;
 import ua.univer.photostock.enums.SortMode;
 import ua.univer.photostock.exception.ObjectNotFoundException;
 import ua.univer.photostock.exception.ValidationException;
@@ -38,6 +42,12 @@ public class PhotoServiceBean implements PhotoService {
 
     @Inject
     private ProfileRepository profileRepository;
+
+    @Inject
+    private ImageStorageService imageStorageService;
+
+    @EJB
+    private ImageProcessorBean imageProcessorBean;
 
     @Resource
     private SessionContext sessionContext;
@@ -91,16 +101,17 @@ public class PhotoServiceBean implements PhotoService {
         photo.setDownloads(photo.getDownloads() + 1);
         photoRepository.update(photo);
 
-        throw new UnsupportedOperationException("Not implemented yet");
+        return imageStorageService.getOriginalImage(photo.getOriginalUrl());
     }
 
     @Override
     @Asynchronous
+    @Interceptors(AsyncOperationInterceptor.class)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void uploadNewPhoto(Profile currentProfile,
             ImageResource imageResource, AsyncOperation<Photo> asyncOperation) {
         try {
-            Photo photo = null;
+            Photo photo = uploadNewPhoto(currentProfile, imageResource);
             asyncOperation.onSuccess(photo);
         } catch (Throwable throwable) {
             sessionContext.setRollbackOnly();
@@ -108,4 +119,15 @@ public class PhotoServiceBean implements PhotoService {
         }
     }
 
+    public Photo uploadNewPhoto(Profile currentProfile,
+            ImageResource imageResource) {
+        Photo photo = imageProcessorBean.processPhoto(imageResource);
+        photo.setProfile(currentProfile);
+        photoRepository.create(photo);
+        photoRepository.flush();
+        currentProfile.setPhotoCount(
+                photoRepository.countProfilePhotos(currentProfile.getId()));
+        profileRepository.update(currentProfile);
+        return photo;
+    }
 }

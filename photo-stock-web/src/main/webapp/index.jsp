@@ -1,5 +1,11 @@
+<!DOCTYPE html>
 <html>
-<body>
-<h2>Hello World!</h2>
-</body>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="refresh" content="0; url=/" />
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+    </body>
 </html>

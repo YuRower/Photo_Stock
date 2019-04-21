@@ -33,7 +33,7 @@
 				<configuration>
 					<version>6</version>
 					<defaultLibBundleDir>lib</defaultLibBundleDir>
-					<!--  <modules>
+					  <modules>
 						<webModule>
 							<artifactId>photo-stock-web</artifactId>
 							<groupId>com.photo.stock</groupId>
@@ -41,7 +41,7 @@
 							<contextRoot>/</contextRoot>
 						</webModule>
 				
-					</modules>-->
+					</modules>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -66,12 +66,12 @@
 			<version>1.0</version>
 			<type>ejb</type>
 		</dependency>
-		<!--<dependency>
+		<dependency>
 			<groupId>com.photo.stock</groupId>
 			<artifactId>photo-stock-web</artifactId>
 			<version>1.0</version>
 			<type>war</type>
-		</dependency>-->
+		</dependency>
 		
 	</dependencies>
 </project>

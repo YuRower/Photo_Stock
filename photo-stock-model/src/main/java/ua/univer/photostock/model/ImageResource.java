@@ -1,8 +1,10 @@
 package ua.univer.photostock.model;
 
-import javax.validation.Path;
+import java.nio.file.Path;
 
 public interface ImageResource extends AutoCloseable {
-
     Path getTempPath();
+
+    @Override
+    void close();
 }

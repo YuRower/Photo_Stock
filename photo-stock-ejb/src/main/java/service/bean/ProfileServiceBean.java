@@ -1,17 +1,23 @@
-package service;
+package service.bean;
 
 import java.util.Optional;
 
 import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 
-import annotation.Property;
+import com.univer.annotation.cdi.Property;
+import com.univer.config.ImageCategory;
+
 import repository.ProfileRepository;
+import service.ImageStorageService;
+import service.interceptor.AsyncOperationInterceptor;
 import ua.univer.photostock.exception.ObjectNotFoundException;
 import ua.univer.photostock.model.AsyncOperation;
 import ua.univer.photostock.model.ImageResource;
@@ -29,6 +35,12 @@ public class ProfileServiceBean implements ProfileService {
 
     @Inject
     private ProfileRepository profileRepository;
+
+    @EJB
+    private ImageProcessorBean imageProcessorBean;
+
+    @Inject
+    private ImageStorageService imageStorageService;
 
     @Override
     public Profile findById(Long id) throws ObjectNotFoundException {
@@ -72,6 +84,7 @@ public class ProfileServiceBean implements ProfileService {
 
     @Override
     @Asynchronous
+    @Interceptors(AsyncOperationInterceptor.class)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void uploadNewAvatar(Profile currentProfile,
             ImageResource imageResource,
@@ -87,7 +100,14 @@ public class ProfileServiceBean implements ProfileService {
 
     public void uploadNewAvatar(Profile currentProfile,
             ImageResource imageResource) {
-
+        String avatarUrl = imageProcessorBean
+                .processProfileAvatar(imageResource);
+        if (ImageCategory.isImageCategoryUrl(currentProfile.getAvatarUrl())) {
+            imageStorageService
+                    .deletePublicImage(currentProfile.getAvatarUrl());
+        }
+        currentProfile.setAvatarUrl(avatarUrl);
+        profileRepository.update(currentProfile);
     }
 
     public void setAvatarPlaceHolder(Long profileId) {

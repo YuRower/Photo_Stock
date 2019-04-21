@@ -7,9 +7,7 @@
 		<version>1.0</version>
 	</parent>
 
- <groupId>com.photo.stock</groupId>
 	<artifactId>photo-stock-web</artifactId>
-	<version>1.0</version>
 	<packaging>war</packaging>
     <name>photo-stock-web</name>
 
@@ -31,6 +29,12 @@
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
+<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
+</dependency>
 
 		<dependency>
 			<groupId>com.photo.stock</groupId>
