@@ -1,20 +1,8 @@
-/*
- * Copyright 2017 </>DevStudy.net.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package web.controller;
+
+import static web.Constants.PHOTO_LIMIT;
+import static web.util.RoutingUtils.forwardToPage;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,8 +23,6 @@ import ua.univer.photostock.model.domain.Photo;
 import ua.univer.photostock.model.domain.Profile;
 import ua.univer.photostock.service.PhotoService;
 import ua.univer.photostock.service.ProfileService;
-import web.Constants;
-import web.util.RoutingUtils;
 
 @WebServlet(urlPatterns = "/", loadOnStartup = 1)
 public class ProfileController extends HttpServlet {
@@ -72,12 +58,12 @@ public class ProfileController extends HttpServlet {
             HttpServletResponse resp) throws IOException, ServletException {
         SortMode sortMode = getSortMode(req);
         List<Photo> photos = photoService.findPopularPhotos(sortMode,
-                new Pageable(1, Constants.PHOTO_LIMIT));
+                new Pageable(1, PHOTO_LIMIT));
         req.setAttribute("photos", photos);
         long totalCount = photoService.countAllPhotos();
         req.setAttribute("totalCount", totalCount);
         req.setAttribute("sortMode", sortMode.name().toLowerCase());
-        RoutingUtils.forwardToPage("home", req, resp);
+        forwardToPage("home", req, resp);
     }
 
     private SortMode getSortMode(HttpServletRequest req) {
@@ -94,8 +80,8 @@ public class ProfileController extends HttpServlet {
         req.setAttribute("profile", profile);
         req.setAttribute("profilePhotos", Boolean.TRUE);
         List<Photo> photos = photoService.findProfilePhotos(profile.getId(),
-                new Pageable(1, Constants.PHOTO_LIMIT));
+                new Pageable(1, PHOTO_LIMIT));
         req.setAttribute("photos", photos);
-        RoutingUtils.forwardToPage("profile", req, resp);
+        forwardToPage("profile", req, resp);
     }
 }

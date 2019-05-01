@@ -1,4 +1,3 @@
-
 package web;
 
 public final class Constants {
