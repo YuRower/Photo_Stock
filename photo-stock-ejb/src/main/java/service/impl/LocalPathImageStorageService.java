@@ -18,6 +18,7 @@ import com.univer.config.ImageCategory;
 
 import service.FileNameGeneratorService;
 import service.ImageStorageService;
+import ua.univer.photostock.exception.ApplicationException;
 import ua.univer.photostock.model.OriginalImage;
 
 @ApplicationScoped
